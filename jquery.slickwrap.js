@@ -1,7 +1,8 @@
 /**
+ * jQSlickWrap v0.2
  * The MIT License
  * 
- * Copyright (c) 2009 Jason Wyatt Feinstein
+ * Copyright (c) 2012 Jason Wyatt Feinstein
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -46,7 +47,7 @@
     }
 
     /**
-     * Meat and potatos of this plugin, it is called on each image.
+     * Meat and potatoes of this plugin, it is called on each image.
      *
      * @scope
      *     The node for the image to slickwrap.
@@ -72,10 +73,10 @@
             bottom: $image.css('padding-bottom'),
             left: $image.css('padding-left')
         };
-        padding.top = parseInt(padding.top.replace(/[^\d]*/g, ""));
-        padding.right = parseInt(padding.right.replace(/[^\d]*/g, ""));
-        padding.bottom = parseInt(padding.bottom.replace(/[^\d]*/g, ""));
-        padding.left = parseInt(padding.left.replace(/[^\d]*/g, ""));
+        padding.top = parseInt(padding.top.replace(/[^\d]*/g, ""), 10);
+        padding.right = parseInt(padding.right.replace(/[^\d]*/g, ""), 10);
+        padding.bottom = parseInt(padding.bottom.replace(/[^\d]*/g, ""), 10);
+        padding.left = parseInt(padding.left.replace(/[^\d]*/g, ""), 10);
         
         /*
          * Create a canvas and draw the image onto the canvas.
@@ -114,31 +115,32 @@
          * Set the parent's background-image to this image.
          */
         if(settings.sourceImage) { //using source image instead of canvas
-          $parent.css({
-            "background-image": "url("+$image.attr("src")+")",
-            "background-position": padding.left+"px "+padding.top+"px",
-            "background-repeat": "no-repeat"
-          });
-          
-          /*
-           * If the float is right it might calculate the backgorund-position based the width of the parent
-           */
-          if(floatDirection=="right") {
-            $parent.css("background-position", ($parent.width()-padding.right-$image.width())+"px "+padding.top+"px");
-            
-            /*
-             *  In case of resizing it MUST calculate the background-position again.
-             */
-            $(window).resize(function() {
-              $parent.css("background-position", ($parent.width()-padding.right-$image.width())+"px "+padding.top+"px");
+            $parent.css({
+                "background-image": "url("+$image.attr("src")+")",
+                "background-position": padding.left+"px "+padding.top+"px",
+                "background-repeat": "no-repeat"
             });
-          }
-        } else
-          $parent.css({
-              "background-image": "url("+canvas.toDataURL()+")",
-              "background-position" : "top "+floatDirection,
-              "background-repeat" : "no-repeat"
-          });
+          
+            /*
+             * If the float is right it might calculate the backgorund-position based the width of the parent
+             */
+            if(floatDirection=="right") {
+                $parent.css("background-position", ($parent.width()-padding.right-$image.width())+"px "+padding.top+"px");
+            
+                /*
+                 *  In case of resizing it MUST calculate the background-position again.
+                 */
+                $(window).resize(function() {
+                    $parent.css("background-position", ($parent.width()-padding.right-$image.width())+"px "+padding.top+"px");
+                });
+            }
+        } else {
+            $parent.css({
+                "background-image": "url("+canvas.toDataURL()+")",
+                "background-position" : "top "+floatDirection,
+                "background-repeat" : "no-repeat"
+            });
+        }
         
         var divWidths = calculateDivWidths.call(this, canvas, padding, settings.bgColor, settings.resolution, settings.bloomPadding, settings.cutoff);
         var divs = [];
@@ -158,9 +160,9 @@
          */
         var parentHeight = $parent.height();
         var imageHeight = $image.height()+padding.top;
-        if(parentHeight < imageHeight){
-            $parent.height(imageHeight);
-        }
+        $parent.css({ 
+            minHeight: imageHeight 
+        });
         
         /*
          * Hide the image itself.
@@ -384,3 +386,4 @@
         };
     }
 })(jQuery);
+

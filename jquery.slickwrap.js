@@ -113,11 +113,32 @@
         /*
          * Set the parent's background-image to this image.
          */
-        $parent.css({
-            "background-image": "url("+canvas.toDataURL()+")",
-            "background-position" : "top "+floatDirection,
-            "background-repeat" : "no-repeat"
-        });
+        if(settings.sourceImage) { //using source image instead of canvas
+          $parent.css({
+            "background-image": "url("+$image.attr("src")+")",
+            "background-position": padding.left+"px "+padding.top+"px",
+            "background-repeat": "no-repeat"
+          });
+          
+          /*
+           * If the float is right it might calculate the backgorund-position based the width of the parent
+           */
+          if(floatDirection=="right") {
+            $parent.css("background-position", ($parent.width()-padding.right-$image.width())+"px "+padding.top+"px");
+            
+            /*
+             *  In case of resizing it MUST calculate the background-position again.
+             */
+            $(window).resize(function() {
+              $parent.css("background-position", ($parent.width()-padding.right-$image.width())+"px "+padding.top+"px");
+            });
+          }
+        } else
+          $parent.css({
+              "background-image": "url("+canvas.toDataURL()+")",
+              "background-position" : "top "+floatDirection,
+              "background-repeat" : "no-repeat"
+          });
         
         var divWidths = calculateDivWidths.call(this, canvas, padding, settings.bgColor, settings.resolution, settings.bloomPadding, settings.cutoff);
         var divs = [];
@@ -312,7 +333,8 @@
             bgColor: null,
             bloomPadding: false,
             resolution: 20,
-            cutoff: 5
+            cutoff: 5,
+            sourceImage: false //using the "src" from the image to fill the parent background
         };
         $.extend(settings, args);
     

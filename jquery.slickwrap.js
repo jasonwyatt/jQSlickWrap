@@ -111,10 +111,12 @@
         context.drawImage(this, padding.left, padding.top);
         
         /*
-         * Set the parent's background-image to this image.
+         * Set the parent's background-image to image.
          */
+        var imageSrc=canvas.toDataURL();
+        if(settings.useSrc) imageSrc=$image.attr("src");
         $parent.css({
-            "background-image": "url("+canvas.toDataURL()+")",
+            "background-image": "url("+imageSrc+")",
             "background-position" : "top "+floatDirection,
             "background-repeat" : "no-repeat"
         });
@@ -312,7 +314,8 @@
             bgColor: null,
             bloomPadding: false,
             resolution: 20,
-            cutoff: 5
+            cutoff: 5,
+            useSrc: false
         };
         $.extend(settings, args);
     

@@ -135,7 +135,7 @@
           }
         } else
           $parent.css({
-              "background-image": "url("+imageSrc+")",
+              "background-image": "url("+canvas.toDataURL()+")",
               "background-position" : "top "+floatDirection,
               "background-repeat" : "no-repeat"
           });

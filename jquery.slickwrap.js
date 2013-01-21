@@ -64,6 +64,9 @@
             return;
         }
         
+        
+        if($image.css("display")=="none") return; //@AlmogBaku: If object is hidden do not wrap it!
+        
         /*
          * Find the padding all the way around.
          */
